@@ -1,0 +1,11 @@
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.gallery img {
+    flex-basis: calc((100% - 60px) / 3);
+
+    max-width: 280px;
+}
