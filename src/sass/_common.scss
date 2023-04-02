@@ -11,3 +11,15 @@ body {
     pointer-events: none;
     visibility: hidden;
 }
+
+.link {
+    text-decoration: none;
+    color: black;
+}
+
+.button {
+    display: block;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
