@@ -3,6 +3,7 @@ import { PixabayAPI } from './js/pixabay-api';
 import { createGalleryMarkup } from './js/create-gallery-markup';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import simpleLightbox from 'simplelightbox';
 
 const refs = {
   formEl: document.querySelector('.search-form'),
@@ -74,3 +75,18 @@ const handleLoadMoreBtnClick = async () => {
 };
 
 refs.loadMoreBtn.addEventListener('click', handleLoadMoreBtnClick);
+
+const handleGalleryItemClick = event => {
+  event.preventDefault();
+
+  if (event.target.nodeName !== 'IMG') {
+    return;
+  }
+
+  const lightbox = new simpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionsDelay: 250,
+  });
+};
+
+refs.galleryEl.addEventListener('click', handleGalleryItemClick);
