@@ -1,32 +1,76 @@
 import { Notify } from 'notiflix';
 import { PixabayAPI } from './js/pixabay-api';
 import { createGalleryMarkup } from './js/create-gallery-markup';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = {
   formEl: document.querySelector('.search-form'),
   inputEl: document.querySelector('.search-form input'),
   galleryEl: document.querySelector('.gallery'),
+  loadMoreBtn: document.querySelector('.load-more'),
 };
-
-console.log(refs);
 
 const pixabayAPI = new PixabayAPI();
 
-const handleSubmit = async event => {
-  event.preventDefault();
-
-  const queryWord = refs.inputEl.value.trim();
-  pixabayAPI.queryWord = queryWord;
-
-  const { data } = await pixabayAPI.fetchPhotos();
-
-  if (!data.hits.length) {
-    Notify.warning(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-  }
-
-  createGalleryMarkup(refs.galleryEl, data.hits);
+const hideLoadMoreBtn = () => {
+  refs.loadMoreBtn.classList.add('is-hidden');
+};
+const showLoadMoreBtn = () => {
+  refs.loadMoreBtn.classList.remove('is-hidden');
 };
 
-refs.formEl.addEventListener('submit', handleSubmit);
+const handleFormSubmit = async event => {
+  event.preventDefault();
+  hideLoadMoreBtn();
+  refs.galleryEl.innerHTML = '';
+
+  const queryWord = refs.inputEl.value.trim();
+
+  pixabayAPI.queryWord = queryWord;
+  pixabayAPI.page = 1;
+
+  try {
+    const { data } = await pixabayAPI.fetchPhotos();
+
+    if (!data.hits.length) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    }
+
+    Notify.success(`Hooray! We found ${data.totalHits} images.`);
+
+    createGalleryMarkup(refs.galleryEl, data.hits);
+
+    if (data.totalHits >= pixabayAPI.loadedPhotos()) {
+      showLoadMoreBtn();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+refs.formEl.addEventListener('submit', handleFormSubmit);
+
+const handleLoadMoreBtnClick = async () => {
+  pixabayAPI.page += 1;
+
+  try {
+    const { data } = await pixabayAPI.fetchPhotos();
+
+    if (data.totalHits <= pixabayAPI.loadedPhotos()) {
+      hideLoadMoreBtn();
+      Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+    }
+
+    createGalleryMarkup(refs.galleryEl, data.hits);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+refs.loadMoreBtn.addEventListener('click', handleLoadMoreBtnClick);

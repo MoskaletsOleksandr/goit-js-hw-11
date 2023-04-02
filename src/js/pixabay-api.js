@@ -8,13 +8,20 @@ export class PixabayAPI {
 
   queryWord = null;
   page = 1;
+  per_page = 40;
+
+  loadedPhotos() {
+    return this.page * this.per_page;
+  }
 
   async fetchPhotos() {
     try {
       return await axios.get(
         `${this.#BASE_URL}/?key=${this.#API_KEY}&q=${
           this.queryWord
-        }&image_type=photo&orientation=horizontal&safesearch=true&page=1&per_page=40`
+        }&image_type=photo&orientation=horizontal&safesearch=true&page=${
+          this.page
+        }&per_page=${this.per_page}`
       );
     } catch (error) {
       throw new Error(error);

@@ -1,19 +1,20 @@
 'use strict';
 
 export const createGalleryMarkup = (DOMElement, photos) => {
-  console.log('created');
-  DOMElement.innerHTML = photos
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => {
-        return `<div class="photo-card">
+  DOMElement.insertAdjacentHTML(
+    'beforeend',
+    photos
+      .map(
+        ({
+          webformatURL,
+          largeImageURL,
+          tags,
+          likes,
+          views,
+          comments,
+          downloads,
+        }) => {
+          return `<div class="photo-card">
   <img src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
@@ -30,7 +31,8 @@ export const createGalleryMarkup = (DOMElement, photos) => {
     </p>
   </div>
 </div>`;
-      }
-    )
-    .join('');
+        }
+      )
+      .join('')
+  );
 };
