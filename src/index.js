@@ -34,7 +34,7 @@ const handleFormSubmit = async event => {
   try {
     const { data } = await pixabayAPI.fetchPhotos();
 
-    if (!data.hits.length) {
+    if (!data.hits.length || !queryWord) {
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );

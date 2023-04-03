@@ -16,7 +16,8 @@ export const createGalleryMarkup = (DOMElement, photos) => {
         }) => {
           return `<div class="photo-card">
         <a class="gallery__link link" href=${largeImageURL}>  
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" width="280"/>
+  <img src="${webformatURL}" alt="${tags}" loading="lazy"/>
+    </a>
   <div class="info">
     <p class="info-item">
       <b>Likes</b>
@@ -35,7 +36,6 @@ export const createGalleryMarkup = (DOMElement, photos) => {
       ${downloads}
     </p>
   </div>
-  </a>
 </div>`;
         }
       )
