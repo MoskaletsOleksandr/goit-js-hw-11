@@ -26,7 +26,7 @@ const handleFormSubmit = async event => {
   hideLoadMoreBtn();
   refs.galleryEl.innerHTML = '';
 
-  const queryWord = refs.inputEl.value.trim();
+  const queryWord = refs.inputEl.value.trim().split(' ').join('+');
 
   pixabayAPI.queryWord = queryWord;
   pixabayAPI.page = 1;
