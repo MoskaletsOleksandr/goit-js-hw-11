@@ -17,6 +17,7 @@ const pixabayAPI = new PixabayAPI();
 const handleFormSubmit = async event => {
   event.preventDefault();
   refs.galleryEl.innerHTML = '';
+  observer.observe(refs.targetEl);
 
   const queryWord = refs.inputEl.value.trim().split(' ').join('+');
 
@@ -48,8 +49,6 @@ const onEntry = entries => {
       pixabayAPI.queryWord !== '' &&
       refs.galleryEl.childElementCount !== 0
     ) {
-      console.log(entry);
-
       pixabayAPI.page += 1;
 
       try {
@@ -57,10 +56,10 @@ const onEntry = entries => {
         createGalleryMarkup(refs.galleryEl, data.hits);
 
         if (data.totalHits <= pixabayAPI.loadedPhotos()) {
-          Notify.failure(
+          Notify.info(
             "We're sorry, but you've reached the end of search results."
           );
-          observer.unobserve(entry);
+          observer.unobserve(refs.targetEl);
         }
       } catch (error) {
         console.log(error);
@@ -73,9 +72,7 @@ const options = {
   rootMargin: '200px',
 };
 
-let observer = new IntersectionObserver(onEntry, options);
-
-observer.observe(refs.targetEl);
+const observer = new IntersectionObserver(onEntry, options);
 
 refs.formEl.addEventListener('submit', handleFormSubmit);
 
